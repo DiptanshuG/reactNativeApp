@@ -5,6 +5,8 @@ import AppLoading from "expo-app-loading";
 import { loadAsync } from "expo-font";
 import react, { useState } from "react";
 import AppNavigator from "./src/components/navigation/AppNavigator";
+import store from "./src/redux/store";
+import { Provider } from "react-redux";
 
 const loadFont = () => {
   return Font.loadAsync({
@@ -26,7 +28,10 @@ export default function App() {
   }
 
   return (
-    <AppNavigator/>
+    <Provider store={store} >
+  <AppNavigator/>
+    </Provider>
+  
   );
 }
 

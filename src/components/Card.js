@@ -1,8 +1,13 @@
-import { StyleSheet, Text, View, Image ,TouchableOpacity} from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
+import * as newsAction from "../redux/actions/newsAction";
 
 const Card = (props) => {
+
+const dispatch=useDispatch();
+  console.log(props.item.item.description,"chuha")
   return (
     <TouchableOpacity
       onPress={() => {
@@ -17,17 +22,21 @@ const Card = (props) => {
           <Image
             style={styles.img}
             source={{
-              uri: "https://media.istockphoto.com/photos/breaking-news-world-news-with-map-backgorund-picture-id1182477852?k=20&m=1182477852&s=612x612&w=0&h=I3wdSzT_5h1y9dHq_YpZ9AqdIKg8epthr8Guva8FkPA=",
+              uri: props.item.item.urlToImage,
             }}
           />
         </View>
         <View style={styles.titleContainer}>
           {" "}
-          <Text style={styles.title}>Dummy text</Text>
-          <MaterialIcons name="favorite-border" size={24} color="red" />
+          <Text style={styles.title}>
+            {props.item.item?.title}
+          </Text>
+          <MaterialIcons onPress={()=>dispatch(newsAction.toggleFav(props.item.item.url))} name="favorite-border" size={24} color="red"  />
         </View>
         <View style={styles.description}>
-          <Text style={styles.descriptionText}>Dummy description</Text>
+          <Text style={styles.descriptionText}>
+            { props.item.item?.description}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -71,12 +80,17 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: "Smooch-Regular",
-
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
     fontSize: "large",
   },
   descriptionText: {
     fontFamily: "Smooch-Regular",
     fontSize: 25,
     fontWeight: "bold",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
 });
