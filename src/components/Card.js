@@ -1,20 +1,27 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as newsAction from "../redux/actions/newsAction";
 
 const Card = (props) => {
+  const dispatch = useDispatch();
+  console.log(props.item.item.url, "chuha");
 
-const dispatch=useDispatch();
-  console.log(props.item.item.description,"chuha")
+  const isFav = useSelector((state) =>
+    state.news.favorites.some((article) => article.url === props.item.item.url)
+  );
+
   return (
     <TouchableOpacity
       onPress={() => {
         // the name we set there matched with ap navigator file inside
 
         //  also pass object props.navigation.navigate({routeName:"NewsItem"});
-        props.navigation.navigate("NewsItem");
+        props.navigation.navigate({
+          routeName: "NewsItem",
+          params: { articleUrl: props.item.item.url },
+        });
       }}
     >
       <View style={styles.Card}>
@@ -28,14 +35,20 @@ const dispatch=useDispatch();
         </View>
         <View style={styles.titleContainer}>
           {" "}
-          <Text style={styles.title}>
-            {props.item.item?.title}
-          </Text>
-          <MaterialIcons onPress={()=>dispatch(newsAction.toggleFav(props.item.item.url))} name="favorite-border" size={24} color="red"  />
+          <Text style={styles.title}>{props.item.item?.title}</Text>
+          <MaterialIcons
+            onPress={() => dispatch(newsAction.toggleFav(props.item.item.url))}
+            name={isFav ? "favorite" : "favorite-border"}
+            size={24}
+            color="red"
+            style={{ cursor: "pointer" }}
+          />
         </View>
         <View style={styles.description}>
           <Text style={styles.descriptionText}>
-            { props.item.item?.description}
+            {props.item.item?.description.length > 100
+              ? props.item.item?.description.slice(0, 60) + "..."
+              : props.item.item?.description}
           </Text>
         </View>
       </View>
@@ -89,8 +102,5 @@ const styles = StyleSheet.create({
     fontFamily: "Smooch-Regular",
     fontSize: 25,
     fontWeight: "bold",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
   },
 });

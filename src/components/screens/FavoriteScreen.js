@@ -1,13 +1,21 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, FlatList } from "react-native";
 import React from "react";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import DrawerHeaderButton from "../DrawerHeaderButton";
+import { useSelector } from "react-redux/es/exports";
+import Card from "../Card";
 
-const FavoriteScreen = () => {
+const FavoriteScreen = (props) => {
+  const favorite = useSelector((state) => state.news.favorites);
+  console.log(favorite, "bhaiaa");
   return (
-    <View>
-      <Text>FavoriteScreen</Text>
-    </View>
+    <FlatList
+      data={favorite || []}
+      keyExtractor={(item) => item?.url}
+      renderItem={(item) => (
+        <Card navigation={props.navigation} item={item} url={item.url} />
+      )}
+    />
   );
 };
 FavoriteScreen.navigationOptions = (navData) => {
